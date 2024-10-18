@@ -1,0 +1,575 @@
+openapi: 3.0.1
+info:
+  contact: {}
+  title: api
+  version: "1.0"
+servers:
+- url: https://api.cameramath.com/
+paths:
+  /v1/brief-answers:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.SolveRequestV1'
+        description: Solution request parameters
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_v1_brief_answers_post_200_response'
+          description: Brief solution result
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: Invalid request parameters
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: "Unauthorized, authentication failed"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: "Too many requests, rate limit exceeded"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: Internal server error
+      security:
+      - BearerAuth: []
+      summary: Answers to all lists of each block
+      tags:
+      - Thoth Engine Module
+      x-codegen-request-body-name: data
+  /v1/show-steps:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.SolveRequestV1'
+        description: Solution request parameters
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_v1_show_steps_post_200_response'
+          description: Full solution result
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: Invalid request parameters
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: "Unauthorized, authentication failed"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: "Too many requests, rate limit exceeded"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: Internal server error
+      security:
+      - BearerAuth: []
+      summary: All lists and all steps of all blocks
+      tags:
+      - Thoth Engine Module
+      x-codegen-request-body-name: data
+  /v1/single-answer:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/request.SolveRequestV1'
+        description: Solution request parameters
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_v1_single_answer_post_200_response'
+          description: Simple solution result
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: Invalid request parameters
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: "Unauthorized, authentication failed"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: "Too many requests, rate limit exceeded"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.Response'
+          description: Internal server error
+      security:
+      - BearerAuth: []
+      summary: "First answer of the first block, text version"
+      tags:
+      - Thoth Engine Module
+      x-codegen-request-body-name: data
+components:
+  schemas:
+    request.SolveRequestV1:
+      properties:
+        input:
+          description: "Mathematical expression input, must be in Latex format, e.g.,\
+            \ \\frac{x+1}{2} \\leq 0"
+          example: x+1=2
+          type: string
+        lang:
+          $ref: '#/components/schemas/request_SolveRequestV1_lang'
+      required:
+      - input
+      type: object
+    response.Response:
+      example:
+        data: "{}"
+        err_msg: err_msg
+      properties:
+        data:
+          type: object
+        err_msg:
+          type: string
+      type: object
+    solver.Description:
+      properties:
+        content:
+          description: Descriptive information
+          type: string
+        format:
+          $ref: '#/components/schemas/solver_Description_format'
+      type: object
+    solver.SelfBriefResponse:
+      example:
+        input: input
+        solutions:
+        - block_name: "{}"
+          solution_name: "{}"
+          results:
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+        - block_name: "{}"
+          solution_name: "{}"
+          results:
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+      properties:
+        input:
+          description: User's Latex input
+          type: string
+        solutions:
+          description: All solutions we can provide
+          items:
+            $ref: '#/components/schemas/solver.Solution'
+          type: array
+      type: object
+    solver.SelfFullResponseText:
+      example:
+        input: input
+        solutions:
+        - solving_steps:
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+          block_name: "{}"
+          solution_name: "{}"
+          results:
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+        - solving_steps:
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+          block_name: "{}"
+          solution_name: "{}"
+          results:
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+          - children:
+            - null
+            - null
+            image_url: image_url
+            description: "{}"
+            latex: latex
+      properties:
+        input:
+          description: User's Latex input
+          type: string
+        solutions:
+          description: All solutions we can provide along with the steps to obtain
+            the solutions
+          items:
+            $ref: '#/components/schemas/solver.SolutionWithSolvingSteps'
+          type: array
+      type: object
+    solver.SelfSimpleResponse:
+      example:
+        input: input
+        solution: "{}"
+      properties:
+        input:
+          description: User's Latex input
+          type: string
+        solution:
+          allOf:
+          - $ref: '#/components/schemas/solver.Solution'
+          description: The solution we believe the user most likely wants
+          type: object
+      type: object
+    solver.Solution:
+      example:
+        block_name: "{}"
+        solution_name: "{}"
+        results:
+        - children:
+          - null
+          - null
+          image_url: image_url
+          description: "{}"
+          latex: latex
+        - children:
+          - null
+          - null
+          image_url: image_url
+          description: "{}"
+          latex: latex
+      properties:
+        block_name:
+          allOf:
+          - $ref: '#/components/schemas/solver.Description'
+          description: "Block name: e.g., Function/Solve the equation"
+          type: object
+        results:
+          description: "Results, possibly multiple, e.g., {\\frac{1}{4},0.25}"
+          items:
+            $ref: '#/components/schemas/solver.Step'
+          type: array
+        solution_name:
+          allOf:
+          - $ref: '#/components/schemas/solver.Description'
+          description: "Specific solution name under the block classification: e.g.,\
+            \ Block: Function, Solution: Find the slope"
+          type: object
+      type: object
+    solver.SolutionWithSolvingSteps:
+      example:
+        solving_steps:
+        - children:
+          - null
+          - null
+          image_url: image_url
+          description: "{}"
+          latex: latex
+        - children:
+          - null
+          - null
+          image_url: image_url
+          description: "{}"
+          latex: latex
+        block_name: "{}"
+        solution_name: "{}"
+        results:
+        - children:
+          - null
+          - null
+          image_url: image_url
+          description: "{}"
+          latex: latex
+        - children:
+          - null
+          - null
+          image_url: image_url
+          description: "{}"
+          latex: latex
+      properties:
+        block_name:
+          allOf:
+          - $ref: '#/components/schemas/solver.Description'
+          description: "Block name: e.g., Function/Solve the equation"
+          type: object
+        results:
+          description: "Results, possibly multiple, e.g., {\\frac{1}{4},0.25}"
+          items:
+            $ref: '#/components/schemas/solver.Step'
+          type: array
+        solution_name:
+          allOf:
+          - $ref: '#/components/schemas/solver.Description'
+          description: "Specific solution name under the block classification: e.g.,\
+            \ Block: Function, Solution: Find the slope"
+          type: object
+        solving_steps:
+          description: Steps to obtain the solution
+          items:
+            $ref: '#/components/schemas/solver.Step'
+          type: array
+      type: object
+    solver.Step:
+      example:
+        children:
+        - null
+        - null
+        image_url: image_url
+        description: "{}"
+        latex: latex
+      properties:
+        children:
+          description: "Sub-steps, supplementing how this step is calculated to reach\
+            \ the next step"
+          items:
+            $ref: '#/components/schemas/solver.Step'
+          type: array
+        description:
+          allOf:
+          - $ref: '#/components/schemas/solver.Description'
+          description: Description of the current step
+          type: object
+        image_url:
+          description: "If the current step is drawing, this URL shows the drawing\
+            \ result"
+          type: string
+        latex:
+          description: Latex display of the current step
+          type: string
+      type: object
+    _v1_brief_answers_post_200_response:
+      allOf:
+      - $ref: '#/components/schemas/response.Response'
+      - properties:
+          data:
+            $ref: '#/components/schemas/solver.SelfBriefResponse'
+        type: object
+      example:
+        data:
+          input: input
+          solutions:
+          - block_name: "{}"
+            solution_name: "{}"
+            results:
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+          - block_name: "{}"
+            solution_name: "{}"
+            results:
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+        err_msg: err_msg
+    _v1_show_steps_post_200_response:
+      allOf:
+      - $ref: '#/components/schemas/response.Response'
+      - properties:
+          data:
+            $ref: '#/components/schemas/solver.SelfFullResponseText'
+        type: object
+      example:
+        data:
+          input: input
+          solutions:
+          - solving_steps:
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+            block_name: "{}"
+            solution_name: "{}"
+            results:
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+          - solving_steps:
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+            block_name: "{}"
+            solution_name: "{}"
+            results:
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+            - children:
+              - null
+              - null
+              image_url: image_url
+              description: "{}"
+              latex: latex
+        err_msg: err_msg
+    _v1_single_answer_post_200_response:
+      allOf:
+      - $ref: '#/components/schemas/response.Response'
+      - properties:
+          data:
+            $ref: '#/components/schemas/solver.SelfSimpleResponse'
+        type: object
+      example:
+        data:
+          input: input
+          solution: "{}"
+        err_msg: err_msg
+    request_SolveRequestV1_lang:
+      description: Output language enumeration values
+      enum:
+      - EN
+      - RU
+      - PT
+      - ES
+      - HI
+      - FR
+      - PL
+      - KO
+      - JA
+      - ZHS
+      - ZHT
+      - VI
+      - IT
+      - DE
+      type: string
+    solver_Description_format:
+      description: "Format of the content: txt (text) / latex (latex)"
+      enum:
+      - txt
+      - latex
+      type: string
+  securitySchemes:
+    BearerAuth:
+      in: header
+      name: Authorization
+      type: apiKey
+x-original-swagger-version: "2.0"
